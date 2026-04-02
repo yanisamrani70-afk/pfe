@@ -226,6 +226,7 @@ function Form() {
           autoClose={3000}
          theme="colored" />
       <Link to="/Agent">go to agent</Link>
+       
       </div>
    
   );

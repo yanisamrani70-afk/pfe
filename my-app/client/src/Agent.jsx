@@ -9,17 +9,25 @@ function Agent() {
   const [doublePayments, setDoublePayments] = useState([]);
   const [selectedDemande, setSelectedDemande] = useState(null);
   const [filteredPayments, setFilteredPayments] = useState([]);
-
+const token = localStorage.getItem("token");
   // تحميل البيانات من backend
   useEffect(() => {
     // طلبات الزبائن
-    fetch("http://localhost:5000/api/demandes")
+    fetch("http://localhost:5000/api/demandes", {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
       .then((res) => res.json())
       .then((data) => setDemandes(data))
       .catch((err) => console.error("Erreur demandes:", err));
 
     // المدفوعات المكررة
-    fetch("http://localhost:5000/api/double-payments")
+    fetch("http://localhost:5000/api/double-payments", {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
       .then((res) => res.json())
       .then((data) => setDoublePayments(data))
       .catch((err) => console.error("Erreur payments:", err));
@@ -74,6 +82,25 @@ const handleRowClick = (demande) => {
   if (!window.confirm(`Approve request of ${selectedDemande.full_name}?`)) return;
 
   try {
+const res = await fetch("http://localhost:5000/api/approve", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+   Authorization: `Bearer ${token}`
+  },
+  body: JSON.stringify({
+    id: selectedDemande.id,
+    full_name: selectedDemande.full_name,
+    customer_identifier: selectedDemande.customer_identifier,
+    transaction_number: selectedDemande.transaction_number,
+    payment_date: selectedDemande.payment_date,
+    amount: selectedDemande.amount,
+    phone: selectedDemande.phone
+  })
+});
+
+
+/*
     const res = await fetch("http://localhost:5000/api/approve", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,6 +114,7 @@ const handleRowClick = (demande) => {
         phone: selectedDemande.phone,
       }),
     });
+    */
 
     const data = await res.json();
 

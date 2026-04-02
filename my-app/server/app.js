@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
@@ -6,10 +7,11 @@ const { Pool } = require("pg");
 const app = express();
 
 /* MIDDLEWARES*/
+/*
 app.use(cors());
 app.use(express.json());
 
-/* Database Connection */
+ Database Connection 
 
 const pool = new Pool({
   user: "postgres",
@@ -19,7 +21,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-/*
+//
 const supabase=createClient(
   'https://vtegyvnfqtydhzmplquq.supabase.co',
   'sb_publishable_9U2afcU4yIA4Tw4DtR7LTg_OJeYuDIN'
@@ -49,9 +51,9 @@ pool.connect()
   .catch(err => console.error("❌ Error connecting to database", err))
 
 module.exports = pool
-*/
+//
 
-/*  Test DB connection */
+  //Test DB connection 
 pool.connect((err, client, release) => {
   if (err) {
     return console.error("❌ Error connecting to database", err.stack);
@@ -60,7 +62,7 @@ pool.connect((err, client, release) => {
   release();
 });
 
-/*  Test Route */
+//Test Route 
 app.get("/", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
@@ -78,7 +80,7 @@ app.get("/get",  (req, res) => {
 });
 
 
-/* ✅Insert Refund */
+// ✅Insert Refund 
 app.post("/api/refund", async (req, res) => {
   console.log("Received Data:", req.body); // مهم باش نشوفو واش يستقبل
 
@@ -200,9 +202,65 @@ app.get("/api/approved-refunds", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+//get function caissier data
+app.get("/api/caissier", async (req, res) => {
+  try {
+    const result = await pool.query(`
+   SELECT 
+   id,
+   name, 
+   
+   customer_id, 
+    bl, 
+
+    transaction_number, 
+    amount,
+
+   payment_date, 
+   status
+  FROM caissier_table
+   ORDER BY payment_date DESC
+  `);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Database Error:", err.message);
+    res.status(500).send("Server error");
+  }
+});
 
 
-/* ✅ Start Server */
+
+// api post ta3 test
+app.post("/api/caissier-post", async (req, res) => {
+  const { items } = req.body;
+
+  if (!items || !items.length) {
+    return res.status(400).json({ error: "No items selected" });
+  }
+
+  try {
+    // Correctly extract IDs from the items array
+    const ids = items.map((item) => item.id);
+
+    const query = `
+      UPDATE caissier_table 
+      SET status = 'approved' 
+      WHERE id = ANY($1)
+    `;
+
+ await pool.query(query, [ids]);
+
+ res.json({ message: "Payments updated successfully" });
+  } catch (error) {
+    console.error("Database Error:", error.message); 
+    res.status(500).json({ error: "Database failed to update" });
+  }
+});
+
+//✅ Start Server 
 app.listen(5000, () => {
   console.log("🚀 Server running on port 5000");
 });
+
+*/
