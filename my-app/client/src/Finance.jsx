@@ -32,7 +32,11 @@ function Finance() {
 
   // Load data from backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/approved-refunds")
+    fetch("http://localhost:5000/api/approved-refunds",{
+       headers: {
+    Authorization: `Bearer ${token}`
+  }
+    })
       .then((res) => res.json())
       .then((data) => setDemandes(data))
       .catch((err) => console.error("Erreur demandes:", err));
