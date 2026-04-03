@@ -1,15 +1,20 @@
 import { useState } from "react";
-
+import './login.css';
 function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+;
   const handleLogin = async (e) => {
 
     e.preventDefault();
     setError("");
+if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
 
     try {
 
@@ -46,9 +51,10 @@ function Login() {
         }
 
       } else {
-        setError(data.error || "Login failed");
+        //error incorrect message
+    setError( "Email or password is incorrect");
       }
-
+         //add here the code 
     } catch (err) {
       console.error(err);
       setError("Server error");
@@ -57,33 +63,45 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="login_container">
+        <div className="login_form">
 
-      <h2>Login</h2>
 
+    
+
+
+      <h2>LOGIN</h2>
+ <label htmlFor="email" className={error ? "label-error" : ""}>Email</label>
       <input
         type="email"
         placeholder="Email"
         value={email}
+        className={error ? "input-error" : ""}
         onChange={(e) => setEmail(e.target.value)}
+        required
+        
       />
 
-      <br />
-
-      <input
+    
+<label htmlFor="password" className={error ? "label-error" : ""} >Password</label>
+      <input   className={error ? "input-error" : ""}
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
+        
       />
 
-      <br />
+      
 
       <button onClick={handleLogin}>Login</button>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
-
+        </div>
+        <h3>&copy; 2026 Prototype</h3>
     </div>
+    
   );
 }
 
