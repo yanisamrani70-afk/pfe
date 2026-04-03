@@ -20,6 +20,8 @@ function Finance() {
   const [selectedDemande, setSelectedDemande] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [dark, setDark] = useState(false);
+//rbac
+  const token = localStorage.getItem("token");
 
   // Toggle dark mode
   useEffect(() => {
@@ -34,6 +36,7 @@ function Finance() {
   useEffect(() => {
     fetch("http://localhost:5000/api/approved-refunds",{
        headers: {
+        //rbac
     Authorization: `Bearer ${token}`
   }
     })
@@ -120,6 +123,7 @@ const getDuplicatePayments = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         id: selectedDemande.id,

@@ -7,7 +7,8 @@ function cassier() {
 
   // ids of checked rows
   const [selectedRows, setSelectedRows] = useState([]);
-
+//rbac
+const token = localStorage.getItem("token");
 
 /*
   // load data once
@@ -21,7 +22,11 @@ function cassier() {
   }, []);*/
   /* recieve data from the caissier table   */
  useEffect(() => {
-    fetch("http://localhost:5000/api/caissier")
+    fetch("http://localhost:5000/api/caissier", {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+ })
       .then((res) => res.json())
       .then((data) => setPayments(data))
       .catch((err) => console.error("Erreur demandes:", err));
@@ -136,7 +141,9 @@ function cassier() {
   try {
     const res = await fetch("http://localhost:5000/api/caissier-post", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`
+       },
       body: JSON.stringify({ items: itemsToApprove }),
     });
 
