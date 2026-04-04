@@ -11,9 +11,9 @@
   flex-direction: column;
   justify-content:space-between;
   align-items: center;
-background: #2899B0;
-background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1) 30%, rgba(1, 59, 166, 1) 68%, rgba(40, 153, 176, 1) 100%);
-}
+ background: linear-gradient(110deg,rgba(2, 0, 36, 1) 0%, rgba(1, 1, 122, 1) 82%, rgba(1, 1, 122, 1) 68%);
+/*background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1) 30%, rgba(1, 59, 166, 1) 68%, rgba(40, 153, 176, 1) 100%);
+*/}
 
 
 .login_form {
@@ -21,7 +21,7 @@ background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1)
   max-width: 600px;
    margin: auto;
    opacity: 0.8;
-  background: rgba(0, 44, 118, 0.85);;
+  background: rgba(255, 255, 255);;
   padding:35px 35px 50px;
   border-radius: 10px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
@@ -33,13 +33,13 @@ background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1)
   
   text-align: center;
   margin-bottom: 25px;
-  color: white;
+  color: black;
 }
 
 .login_form input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #dcdfe4;
+  border:1px solid #dcdfe4;
   border-radius: 5px;
   font-size: 14px;
   background: #f9fafb;
@@ -54,7 +54,7 @@ background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1)
   background: white;
 }
 label{
-  color: white;
+  color: black;
   
 }
 .login_form button {
@@ -62,7 +62,7 @@ label{
   padding: 12px;
   border: none;
   border-radius: 5px;
-  background: #19adc9;
+  background-color: #1c6ed5;
   color: white;
   font-size: 16px;
   
