@@ -19,7 +19,7 @@ const pool = new Pool({
   user: "postgres",
   host: "localhost",
   database: "refund_db",
-  password: "imadorb",
+  password: "1234",
   port: 5432,
 });
 
