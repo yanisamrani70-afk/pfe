@@ -20,7 +20,8 @@ router.post("/caissier-post", refundController.testapicassier);
 
 // Routes للـ Finance
 router.get("/approved-refunds", auth, checkRole("finance", "cassier"), refundController.getApprovedRefunds);
-
+//hada wsh zdt
+router.post("/caissiersend", auth, checkRole("finance", "cassier"), refundController.caissiersend);
 // Test route protected
 router.get("/refunds", auth, (req, res) => {
   res.json({

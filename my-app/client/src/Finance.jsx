@@ -34,18 +34,15 @@ function Finance() {
 
   // Load data from backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/approved-refunds",{
-       headers: {
-        //rbac
-    Authorization: `Bearer ${token}`
-  }
-    })
-      .then((res) => res.json())
-      .then((data) => setDemandes(data))
-      .catch((err) => console.error("Erreur demandes:", err));
-
-   
-  }, []);
+   fetch("http://localhost:5000/api/approved-refunds", {
+    headers: {
+      Authorization: `Bearer ${token}`, // صححت هنا
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => setDemandes(data))
+    .catch((err) => console.error("Erreur demandes:", err));
+}, []);
 
 
 useEffect(() => {
@@ -87,7 +84,7 @@ const getDuplicatePayments = () => {
   
   // Check if row is valid by BL
   const isRowValid = (row, demande) => {
-    if (!demande || row.BL !== demande.BL) return false;
+    if (!demande || row.BL !== demande.bl) return false;
     return row.amount === demande.amount && row.status === "paid";
   };
 
@@ -95,7 +92,7 @@ const getDuplicatePayments = () => {
   const handleRowClick = (demande) => {
     setSelectedDemande(demande);
 
-    const match = bankCSV.find((row) => row.BL === demande.BL);
+    const match = bankCSV.find((row) => row.BL === demande.bl);
     
     if (match) {
       setFilteredCSV([match]);
@@ -118,6 +115,46 @@ const getDuplicatePayments = () => {
   if (!selectedDemande) return;
   if (!window.confirm(`Approve refund for ${selectedDemande.full_name}?`)) return;
 
+  // تحقق من صحة العملية
+  if (!isValid) {
+    alert("This refund does not match a valid bank transaction ❌");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/caissiersend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: selectedDemande.full_name,
+        customer_id: selectedDemande.customer_identifier,
+        bl: selectedDemande.bl,
+        transaction_number: selectedDemande.transaction_number,
+        amount: selectedDemande.amount,
+        payment_date: selectedDemande.payment_date,
+        status: "pending",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Insert failed");
+    }
+
+    // رسالة نجاح
+    alert("Inserted into caissier_table successfully ✅");
+
+  } catch (err) {
+    console.error("Error inserting into caissier_table:", err);
+    alert("Error saving to caissier table ❌");
+  }
+};
+
+/*
   try {
     const res = await fetch("http://localhost:5000/api/approve", {
       method: "POST",
@@ -154,8 +191,8 @@ const getDuplicatePayments = () => {
   } catch (err) {
     console.error(err);
     alert("Server error ❌");
-  }
-};
+  }*/
+
 
   // Reject
   const handleReject = () => {
@@ -225,7 +262,7 @@ const getDuplicatePayments = () => {
         <td>{demande.id}</td>
         <td>{demande.full_name}</td>
         <td>{demande.customer_identifier}</td> {/* كان customer_id، صححناه */}
-        <td>{demande.BL}</td>
+        <td>{demande.bl}</td>
         <td>{demande.transaction_number}</td>
         <td>{demande.payment_date}</td>
         <td>€{demande.amount}</td>

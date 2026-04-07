@@ -176,3 +176,97 @@ exports.getApprovedRefunds = async (req, res) => {
     res.status(500).json({ error: "Database failed to update" });
   }
 };
+
+//function ta3 http://localhost:5000/api/caissiersend
+/*
+exports.caissiersend = async (req, res) => {
+  const {
+    name,
+    customer_id,
+    bl,
+    transaction_number,
+    payment_date,
+    amount,
+    status
+  } = req.body;
+
+  try {
+    if (!customer_id || !bl || !amount) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    await pool.query(
+      `INSERT INTO caissier_table
+      (name, customer_id, bl, transaction_number, payment_date, amount, status)
+      VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        name,
+        customer_id,
+        bl,
+        transaction_number,
+        payment_date,
+        amount,
+        status
+      ]
+    );
+
+    res.json({ message: "Inserted into caissier_table successfully" });
+  } catch (error) {
+    console.error("Insert Cassier Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+*/
+exports.caissiersend = async (req, res) => {
+  try {
+    let { name, bl, transaction_number, amount, payment_date } = req.body;
+
+    console.log("Received body:", req.body);
+
+    if (!name || !bl || !transaction_number || !amount || !payment_date) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const amountNumber = Number(amount);
+    if (isNaN(amountNumber)) return res.status(400).json({ error: "Invalid amount" });
+
+    console.log("Fetching customer_id for:", { name, bl, amount: amountNumber });
+
+    const idResult = await pool.query(
+      `SELECT customer_identifier FROM approved_refunds
+       WHERE full_name = $1 AND bl = $2 AND amount = $3
+       LIMIT 1`,
+      [name, bl, amountNumber]
+    );
+
+    console.log("Customer_id result:", idResult.rows);
+
+    if (idResult.rows.length === 0) {
+      return res.status(400).json({ error: "No matching approved refund found to get client ID" });
+    }
+
+    const customer_id = idResult.rows[0].customer_identifier;
+
+    const existing = await pool.query(
+      `SELECT * FROM caissier_table WHERE name = $1 AND bl = $2 AND amount = $3`,
+      [name, bl, amountNumber]
+    );
+
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "This payment already exists in caissier_table ❌" });
+    }
+
+    await pool.query(
+      `INSERT INTO caissier_table
+       (name, customer_id, bl, transaction_number, amount, payment_date, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [name, customer_id, bl, transaction_number, amountNumber, payment_date, "Pending"]
+    );
+
+    res.json({ message: "Inserted into caissier_table with status Pending ✅" });
+
+  } catch (err) {
+    console.error("Insert error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};

@@ -23,3 +23,6 @@ app.use("/api", authRoutes);
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
+
+// bash tmshi schedular1.js
+require("./config/schedular1");

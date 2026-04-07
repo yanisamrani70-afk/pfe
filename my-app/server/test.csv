@@ -1,0 +1,3 @@
+id,name,customer_id,bl,transaction_number,amount,payment_date,status
+1,Yanis Amrani,C123,BL001,TX1001,120.00,Sat Mar 28 2026 00:00:00 GMT+0100 (heure normale d’Europe centrale),approved
+2,Sara Ahmed,C124,BL002,TX1002,250.00,Sat Mar 28 2026 00:00:00 GMT+0100 (heure normale d’Europe centrale),approved

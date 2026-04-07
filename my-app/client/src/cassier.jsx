@@ -186,6 +186,9 @@ const token = localStorage.getItem("token");
         >
           Approve All
         </button>
+        <a href="/server/test.csv" download="test.csv">
+      <button>Download PDF</button>
+    </a>
       </div>
 
  <div id="cassier-table-container">
