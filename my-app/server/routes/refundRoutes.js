@@ -30,4 +30,11 @@ router.get("/refunds", auth, (req, res) => {
   });
 });
 
+router.get(
+  "/download-csv",
+  auth,
+  checkRole("finance", "cassier"),
+  refundController.download_csv
+);
+
 module.exports = router;

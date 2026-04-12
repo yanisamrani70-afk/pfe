@@ -217,7 +217,7 @@ exports.caissiersend = async (req, res) => {
   }
 };
 */
-exports.caissiersend = async (req, res) => {
+exports.caissiersend=async(req, res) => {
   try {
     let { name, bl, transaction_number, amount, payment_date } = req.body;
 
@@ -269,4 +269,24 @@ exports.caissiersend = async (req, res) => {
     console.error("Insert error:", err);
     res.status(500).json({ error: "Server error" });
   }
+};
+
+//app.get("/api/download-csv", 
+ const path = require("path");
+const fs = require("fs");
+
+exports.download_csv = (req, res) => {
+  const filePath = path.join(__dirname, "../test.csv");
+
+  // check file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  res.download(filePath, "test.csv", (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Download failed" });
+    }
+  });
 };
