@@ -170,6 +170,33 @@ const token = localStorage.getItem("token");
 
   };
 
+
+const downloadCSV = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/api/download-csv", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) throw new Error("Download failed");
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "test.csv";
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert("Download error");
+  }
+};
+
   return (
     <div id="cassier-dashboard">
       <header id="cassier-header" className="header_caissier">
@@ -186,9 +213,9 @@ const token = localStorage.getItem("token");
         >
           Approve All
         </button>
-        <a href="/server/test.csv" download="test.csv">
-      <button>Download PDF</button>
-    </a>
+       <button onClick={downloadCSV}>
+           Download CSV
+        </button>
       </div>
 
  <div id="cassier-table-container">

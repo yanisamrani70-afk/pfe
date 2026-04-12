@@ -14,7 +14,7 @@ function App() {
      <Route path="/finance" element={<Finance/>} />
       <Route path="/cassier" element={<Cassier/>} />
     <Route path="/ login" element={< Login/>} />
-    <Route path="/ form" element={< Form/>} />
+    <Route path="/form" element={< Form/>} />
      
      </Routes>
   );
