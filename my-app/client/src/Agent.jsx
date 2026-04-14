@@ -157,6 +157,16 @@ const res = await fetch("http://localhost:5000/api/approve", {
   localStorage.removeItem("role");
   window.location.href = "/";      
 };
+/*
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+const handleLogout = () => {
+  localStorage.clear();
+  navigate("/");
+};
+*/
   return (
     <>
       <header className="header">
