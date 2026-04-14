@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
 
-// مثال بسيط لتسجيل الدخول
+// 
 exports.login = async (req, res) => {
    const { email, password } = req.body;
 

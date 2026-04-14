@@ -328,3 +328,16 @@ footer {
   font-size: 0.9rem;
   font-style: italic;
 }
+
+.logout-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout-btn:hover {
+  background-color: darkred;
+}

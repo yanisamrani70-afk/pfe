@@ -36,5 +36,14 @@ router.get(
   checkRole("finance", "cassier"),
   refundController.download_csv
 );
-
+// new
+/*
+router.post(
+  "/send-to-finance",
+  auth,
+  checkRole("cassier"),
+  refundController.sendToFinance
+  
+);
+*/
 module.exports = router;

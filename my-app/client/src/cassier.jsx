@@ -196,11 +196,19 @@ const downloadCSV = async () => {
     alert("Download error");
   }
 };
+const handleLogout = () => {
+  localStorage.removeItem("token"); 
+  localStorage.removeItem("role");
+  window.location.href = "/";      
+};
 
   return (
     <div id="cassier-dashboard">
       <header id="cassier-header" className="header_caissier">
         <h1>Caissier Dashboard</h1>
+        <button onClick={handleLogout} className="logout-btn">
+           Logout
+       </button>
       </header>
 
       <div id="approve-all-container">
@@ -211,7 +219,7 @@ const downloadCSV = async () => {
           onClick={handleApproveAll}
           
         >
-          Approve All
+          Approve 
         </button>
        <button onClick={downloadCSV}>
            Download CSV

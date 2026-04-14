@@ -152,12 +152,20 @@ const res = await fetch("http://localhost:5000/api/approve", {
     setFilteredPayments([]);
     alert("Request Rejected");
   };
-
+ const handleLogout = () => {
+  localStorage.removeItem("token"); 
+  localStorage.removeItem("role");
+  window.location.href = "/";      
+};
   return (
     <>
       <header className="header">
         <h1>Agent Dashboard</h1>
          <img src="/photo_2026-03-06_00-59-26.jpg" alt="" />
+
+          <button onClick={handleLogout} className="logout-btn">
+           Logout
+       </button>
       </header>
 
       <main>

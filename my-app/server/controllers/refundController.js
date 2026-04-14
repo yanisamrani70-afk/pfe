@@ -290,3 +290,31 @@ exports.download_csv = (req, res) => {
     }
   });
 };
+//new
+
+/*
+exports.sendToFinance = async (req, res) => {
+  const items = req.body.items;
+
+  const filePath = path.join(__dirname, "../finance_report.csv");
+
+  let csv = "name,amount,status\n";
+
+  items.forEach(i => {
+    csv += `${i.name},${i.amount},${i.status}\n`;
+  });
+
+  fs.writeFileSync(filePath, csv);
+
+  // هنا “إرسال للـ finance”
+  // مثال: تخزنو في DB ولا table خاص بالفاينانس
+  // أو تبعث notification
+
+  await pool.query(
+    "INSERT INTO finance_files(file_name, path) VALUES($1, $2)",
+    ["finance_report.csv", filePath]
+  );
+
+  res.json({ message: "Sent to finance successfully" });
+};
+*/

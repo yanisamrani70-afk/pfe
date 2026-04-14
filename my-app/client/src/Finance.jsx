@@ -220,6 +220,12 @@ const getDuplicatePayments = () => {
     return "";
   };
 
+  const handleLogout = () => {
+  localStorage.removeItem("token"); 
+  localStorage.removeItem("role");
+  window.location.href = "/";      
+};
+
   return (
     <div className="app-container">
       <header className="header">
@@ -229,6 +235,9 @@ const getDuplicatePayments = () => {
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
         </div>
+         <button onClick={handleLogout} className="logout-btn">
+           Logout
+       </button>
       </header>
 
       <main>
