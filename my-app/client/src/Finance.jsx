@@ -297,7 +297,7 @@ const handleReject = async () => {
         <td>{demande.bl}</td>
         <td>{demande.transaction_number}</td>
         <td>{demande.payment_date}</td>
-        <td>€{demande.amount}</td>
+        <td>{demande.amount} DA</td>
         <td>{demande.reason}</td>
         <td>{demande.phone}</td>
         <td>
@@ -345,7 +345,7 @@ const handleReject = async () => {
                           <td>{row.transaction_number}</td>
                           <td>{row.customer_id}</td>
                           <td>{row.name}</td>
-                          <td>€{row.amount}</td>
+                          <td>{row.amount} DA</td>
                           <td>{row.date}</td>
                           <td>{row.status}</td>
                         </tr>

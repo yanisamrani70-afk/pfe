@@ -171,9 +171,9 @@ const token = localStorage.getItem("token");
   };
 
 
-const downloadCSV = async () => {
+const downloadExcel = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/download-csv", {
+    const res = await fetch("http://localhost:5000/api/downloadExcel", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
@@ -187,7 +187,7 @@ const downloadCSV = async () => {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "test.csv";
+    a.download = "test.xlsx";
     a.click();
 
     window.URL.revokeObjectURL(url);
@@ -221,8 +221,8 @@ const handleLogout = () => {
         >
           Approve 
         </button>
-       <button onClick={downloadCSV}>
-           Download CSV
+       <button onClick={downloadExcel}>
+           Download Excel
         </button>
       </div>
 
@@ -254,7 +254,7 @@ const handleLogout = () => {
             <td>{row.customer_id}</td>
             <td>{row.bl}</td>
            <td>{row.transaction_number}</td>
-          <td>€{row.amount}</td>
+          <td>{row.amount} DA</td>
          <td>{row.date}</td>
           <td>
           <span className={`status-badge ${getStatusClass(row.status)}`}>     {row.status}

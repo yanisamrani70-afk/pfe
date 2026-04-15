@@ -276,15 +276,15 @@ exports.caissiersend=async(req, res) => {
  const path = require("path");
 const fs = require("fs");
 
-exports.download_csv = (req, res) => {
-  const filePath = path.join(__dirname, "../test.csv");
+exports.downloadExcel = (req, res) => {
+  const filePath = path.join(__dirname, "../test.xlsx");
 
   // check file exists
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ error: "File not found" });
   }
 
-  res.download(filePath, "test.csv", (err) => {
+  res.download(filePath, "test.xlsx", (err) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: "Download failed" });

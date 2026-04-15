@@ -229,7 +229,7 @@ const handleLogout = () => {
                         <td>{demande.customer_identifier}</td>
                         <td>{demande.transaction_number}</td>
                         <td>{demande.payment_date}</td>
-                        <td>{demande.amount} €</td>
+                        <td>{demande.amount} DA</td>
                         <td>{demande.reason}</td>
                         <td>{demande.phone}</td>
                         <td>
@@ -271,7 +271,7 @@ const handleLogout = () => {
                     filteredPayments.map((payment) => (
                       <tr key={payment.id}>
                         <td>{payment.customer_identifier}</td>
-                        <td>{payment.amount} €</td>
+                        <td>{payment.amount} DA</td>
                         <td>{payment.payment_date}</td>
                       </tr>
                     ))

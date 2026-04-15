@@ -32,10 +32,10 @@ router.get("/refunds", auth, (req, res) => {
 });
 
 router.get(
-  "/download-csv",
+  "/downloadExcel",
   auth,
   checkRole("finance", "cassier"),
-  refundController.download_csv
+  refundController.downloadExcel
 );
 
 
