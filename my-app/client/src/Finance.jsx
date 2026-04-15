@@ -195,19 +195,42 @@ const getDuplicatePayments = () => {
 
 
   // Reject
-  const handleReject = () => {
-    if (!selectedDemande) return;
-    if (!window.confirm(`Reject refund for ${selectedDemande.full_name}?`)) return;
+const handleReject = async () => {
+  if (!selectedDemande) return;
+  if (!window.confirm(`Reject refund for ${selectedDemande.full_name}?`)) return;
+
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/demandes/${selectedDemande.id}/rejectfinance`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Request failed");
 
     setDemandes((prev) =>
       prev.map((d) =>
-        d.id === selectedDemande.id ? { ...d, status: "Rejeté" } : d
+        d.id === selectedDemande.id
+          ? { ...d, status: "Rejeté" }
+          : d
       )
     );
 
-    alert("Refund rejected");
+    alert("Refund rejected successfully");
     resetSelection();
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("Error rejecting refund");
+  }
+};
 
   // Check if buttons disabled
   const isButtonDisabled = !selectedDemande || selectedDemande.status === "Validé" || selectedDemande.status === "Rejeté";

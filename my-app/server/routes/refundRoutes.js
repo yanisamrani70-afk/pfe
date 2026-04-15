@@ -13,6 +13,7 @@ router.post("/login", authController.login);
 router.get("/demandes", auth, checkRole("agent"), refundController.getDemandes);
 router.get("/double-payments", auth, checkRole("agent"), refundController.getDoublePayments);
 router.post("/approve", auth, checkRole("agent"), refundController.approveRefund);
+router.put("/:id/reject", auth, checkRole("agent"), refundController.rejectDemande);
 
 // Routes للـ Cassier
 router.get("/caissier", refundController.getcassierdata);
@@ -36,6 +37,8 @@ router.get(
   checkRole("finance", "cassier"),
   refundController.download_csv
 );
+
+
 // new
 /*
 router.post(

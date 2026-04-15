@@ -138,20 +138,38 @@ const res = await fetch("http://localhost:5000/api/approve", {
   }
 };
   // Reject
-  const handleReject = () => {
-    if (!selectedDemande) return;
-    if (!window.confirm(`Reject request of ${selectedDemande.full_name}?`)) return;
+const handleReject = async () => {
+  if (!selectedDemande) return;
+  if (!window.confirm(`Reject request of ${selectedDemande.full_name}?`)) return;
 
+  try {
+    const res = await fetch(`http://localhost:5000/api/${selectedDemande.id}/reject`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+       Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error);
+
+    // تحديث الواجهة بعد النجاح
     setDemandes((prev) =>
       prev.map((d) =>
         d.id === selectedDemande.id ? { ...d, status: "rejected" } : d
       )
     );
 
-    setSelectedDemande(null);
-    setFilteredPayments([]);
-    alert("Request Rejected");
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Error rejecting request");
+  }
+};
+
+
+    
  const handleLogout = () => {
   localStorage.removeItem("token"); 
   localStorage.removeItem("role");
@@ -281,7 +299,9 @@ const handleLogout = () => {
 </button>
           <button
             className="btn reject"
-            disabled={!selectedDemande || selectedDemande.status}
+             disabled={
+                   !selectedDemande || selectedDemande.status === "rejected" || selectedDemande.status === "approved"
+                    }
             onClick={handleReject}
           >
             REJECT

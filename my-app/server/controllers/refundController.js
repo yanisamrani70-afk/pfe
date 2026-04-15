@@ -119,6 +119,7 @@ exports.getApprovedRefunds = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
 //get function caissier data
 
   exports.getcassierdata= async (req, res) => {
@@ -318,3 +319,26 @@ exports.sendToFinance = async (req, res) => {
   res.json({ message: "Sent to finance successfully" });
 };
 */
+exports.rejectDemande = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "UPDATE refund_requests SET status = $1 WHERE id = $2 RETURNING *",
+      ["rejected", id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Demande not found" });
+    }
+
+    res.json({
+      message: "Demande rejected successfully",
+      demande: result.rows[0],
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
