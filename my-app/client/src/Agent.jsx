@@ -3,7 +3,7 @@ import "./Agent.css";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import logoutLogo from "./assets/logout-16.ico";
 function Agent() {
   const [demandes, setDemandes] = useState([]);
   const [doublePayments, setDoublePayments] = useState([]);
@@ -95,7 +95,8 @@ const res = await fetch("http://localhost:5000/api/approve", {
     transaction_number: selectedDemande.transaction_number,
     payment_date: selectedDemande.payment_date,
     amount: selectedDemande.amount,
-    phone: selectedDemande.phone
+    phone: selectedDemande.phone,
+    bl: selectedDemande.bl
   })
 });
 
@@ -131,10 +132,10 @@ const res = await fetch("http://localhost:5000/api/approve", {
 
     setSelectedDemande(null);
     setFilteredPayments([]);
-    toast.success("Saved in database ✅");
+    toast.success("Saved in database ");
   } catch (err) {
     console.error(err);
-    toast.error(err.message || "Server error ❌");
+    toast.error(err.message || "Server error ");
   }
 };
   // Reject
@@ -170,10 +171,12 @@ const handleReject = async () => {
 
 
     
- const handleLogout = () => {
+const handleLogout = () => {
+  if (window.confirm("Are you sure you want to log out?")) {
   localStorage.removeItem("token"); 
   localStorage.removeItem("role");
-  window.location.href = "/";      
+  window.location.href = "/";   
+  }   
 };
 /*
 import { useNavigate } from "react-router-dom";
@@ -192,7 +195,7 @@ const handleLogout = () => {
          <img src="/photo_2026-03-06_00-59-26.jpg" alt="" />
 
           <button onClick={handleLogout} className="logout-btn">
-           Logout
+           <img src={logoutLogo} alt="Logout"/> Logout
        </button>
       </header>
 
@@ -209,6 +212,7 @@ const handleLogout = () => {
                     <th>Name</th>
                     <th>Customer ID</th>
                     <th>Transaction</th>
+                    <th>BL</th>
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Reason</th>
@@ -228,6 +232,7 @@ const handleLogout = () => {
                         <td>{demande.full_name}</td>
                         <td>{demande.customer_identifier}</td>
                         <td>{demande.transaction_number}</td>
+                        <td>{demande.bl}</td>
                         <td>{demande.payment_date}</td>
                         <td>{demande.amount} DA</td>
                         <td>{demande.reason}</td>
@@ -262,6 +267,7 @@ const handleLogout = () => {
                 <thead className="table-header">
                   <tr>
                     <th>Customer ID</th>
+                    <th>BL</th>
                     <th>Amount</th>
                     <th>Date</th>
                   </tr>
@@ -271,6 +277,7 @@ const handleLogout = () => {
                     filteredPayments.map((payment) => (
                       <tr key={payment.id}>
                         <td>{payment.customer_identifier}</td>
+                        <td>{payment.bl}</td>
                         <td>{payment.amount} DA</td>
                         <td>{payment.payment_date}</td>
                       </tr>
@@ -308,7 +315,7 @@ const handleLogout = () => {
           </button>
         </div>
       </main>
- <Link to="/Finance">go to f</Link>
+ 
  <ToastContainer position="top-center" autoClose={3000} />
       <footer>
         <p>Prototype © 2026</p>

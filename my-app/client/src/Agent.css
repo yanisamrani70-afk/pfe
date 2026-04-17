@@ -2,7 +2,7 @@
 #root {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 
@@ -336,6 +336,9 @@ footer {
   padding: 8px 15px;
   cursor: pointer;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
 }
 
 .logout-btn:hover {

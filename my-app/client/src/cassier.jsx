@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import "./cassier.css";
+import logoutLogo from "./assets/logout-16.ico";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function cassier() {
   // table data
@@ -104,13 +108,15 @@ const token = localStorage.getItem("token");
 
     // no pending
     if (pendingCount === 0 && approvedCount == 0) {
-      alert("Select pending payments to approve");
+      
+      toast.info("Select pending payments to approve");
       return;
     }
   
      // if no pending and only approved 
     if(!pendingCount && approvedCount > 0 ){
-      alert("The selected payments are already approved");
+      
+       toast.info("The selected payments are already approved");
       return;
     }
    
@@ -161,11 +167,11 @@ const token = localStorage.getItem("token");
 
     setPayments(newPayments);
     setSelectedRows([]);
-    alert(`${pendingCount} payments approved and saved to DB`);
+    toast.success(`${pendingCount} payments approved and saved to DB`);
     
   } catch (err) {
     console.error(err);
-    alert("Failed to approve");
+    toast.error("Failed to approve");
   }
 
   };
@@ -193,13 +199,16 @@ const downloadExcel = async () => {
     window.URL.revokeObjectURL(url);
   } catch (err) {
     console.error(err);
-    alert("Download error");
+   
+    toast.error("Download error");
   }
 };
 const handleLogout = () => {
+  if (window.confirm("Are you sure you want to log out?")) {
   localStorage.removeItem("token"); 
   localStorage.removeItem("role");
-  window.location.href = "/";      
+  window.location.href = "/";   
+  }   
 };
 
   return (
@@ -207,23 +216,24 @@ const handleLogout = () => {
       <header id="cassier-header" className="header_caissier">
         <h1>Caissier Dashboard</h1>
         <button onClick={handleLogout} className="logout-btn">
-           Logout
-       </button>
+                  <img src={logoutLogo} alt="Logout"/> Logout
+               </button>
       </header>
 
       <div id="approve-all-container">
         <h2>Caissier Table</h2>
-
-        <button
+     <div >
+        <button className="buttons_Container"
           id="approve-all-btn"
           onClick={handleApproveAll}
           
         >
           Approve 
         </button>
-       <button onClick={downloadExcel}>
+       <button id="excelDwnld" onClick={downloadExcel}>
            Download Excel
         </button>
+        </div>
       </div>
 
  <div id="cassier-table-container">
@@ -238,7 +248,7 @@ const handleLogout = () => {
           <th>Customer ID</th>
          <th>BL</th>
          <th>Transaction</th>
-          <th>Amount (€)</th>
+          <th>Amount </th>
          <th>Date</th>
         <th>Status</th>
        </tr>
@@ -255,7 +265,7 @@ const handleLogout = () => {
             <td>{row.bl}</td>
            <td>{row.transaction_number}</td>
           <td>{row.amount} DA</td>
-         <td>{row.date}</td>
+         <td>{row.payment_date}</td>
           <td>
           <span className={`status-badge ${getStatusClass(row.status)}`}>     {row.status}
           </span>
@@ -272,6 +282,7 @@ const handleLogout = () => {
           </tbody>
         </table>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />  
     </div>
   );
 }

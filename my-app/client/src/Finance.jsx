@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import "./Finance.css";
 import { Link } from "react-router-dom";
-  // icons imported from https://icons.getbootstrap.com/icons
+import logoutLogo from "./assets/logout-16.ico";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// icons imported from https://icons.getbootstrap.com/icons
 const MoonIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moon" viewBox="0 0 16 16">
   <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/>
@@ -117,7 +120,8 @@ const getDuplicatePayments = () => {
 
   // تحقق من صحة العملية
   if (!isValid) {
-    alert("This refund does not match a valid bank transaction ❌");
+    
+    toast.error("This refund does not match a valid bank transaction ");
     return;
   }
 
@@ -146,11 +150,15 @@ const getDuplicatePayments = () => {
     }
 
     // رسالة نجاح
-    alert("Inserted into caissier_table successfully ✅");
+    
+    toast.success("Inserted into caissier_table successfully");
 
   } catch (err) {
     console.error("Error inserting into caissier_table:", err);
-    alert("Error saving to caissier table ❌");
+    toast.error(`${err.message}`);
+      
+  
+    
   }
 };
 
@@ -222,13 +230,13 @@ const handleReject = async () => {
           : d
       )
     );
-
-    alert("Refund rejected successfully");
+    toast.success("Refund rejected successfully");
+    
     resetSelection();
 
   } catch (err) {
     console.error(err);
-    alert("Error rejecting refund");
+    toast.error("Error rejecting refund");
   }
 };
 
@@ -244,23 +252,27 @@ const handleReject = async () => {
   };
 
   const handleLogout = () => {
+  if (window.confirm("Are you sure you want to log out?")) {
   localStorage.removeItem("token"); 
   localStorage.removeItem("role");
-  window.location.href = "/";      
+  window.location.href = "/";   
+  }   
 };
 
   return (
     <div className="app-container">
       <header className="header">
         <h1>Finance Dashboard</h1>
-        <div className="header-right">
+        {/* <div className="header-right"> */}
+          <div className="buttons-container">
           <button className="theme-toggle-btn" onClick={() => setDark(!dark)}>
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
-        </div>
+        
          <button onClick={handleLogout} className="logout-btn">
-           Logout
+          <img src={logoutLogo} alt="Logout"/> Logout
        </button>
+       </div>
       </header>
 
       <main>
@@ -279,13 +291,13 @@ const handleReject = async () => {
                     <th>Transaction</th>
                     <th>Date</th>
                     <th>Amount</th>
-                    <th>Reason</th>
+                    {/* <th>Reason</th> */}
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody className="table-body">
   {demandes.length > 0 ? (
-    demandes.map((demande) => (
+    demandes.map((demande) =>(
       <tr
         key={demande.id}
         onClick={() => handleRowClick(demande)}
@@ -293,18 +305,14 @@ const handleReject = async () => {
       >
         <td>{demande.id}</td>
         <td>{demande.full_name}</td>
-        <td>{demande.customer_identifier}</td> {/* كان customer_id، صححناه */}
+        <td>{demande.customer_identifier}</td>
         <td>{demande.bl}</td>
         <td>{demande.transaction_number}</td>
         <td>{demande.payment_date}</td>
         <td>{demande.amount} DA</td>
-        <td>{demande.reason}</td>
-        <td>{demande.phone}</td>
-        <td>
-          <span className={`status-badge ${getStatusClass(demande.status)}`}>
-            {demande.status || "Pending"}
-          </span>
-        </td>
+        
+        <td>{demande.status || "pending"}</td>
+        
       </tr>
     ))
   ) : (
@@ -380,11 +388,9 @@ const handleReject = async () => {
           >
             Reject
           </button>
-          <Link to="/Agent">Go to Agent</Link>
-          <Link to="/cassier">Go to c</Link>
-        </div>
+          </div>
       </main>
-
+  <ToastContainer position="top-center" autoClose={3000} />  
       <footer>
         <p>Prototype © 2026</p>
       </footer>

@@ -173,3 +173,9 @@ text-align: center;
   color: #888;
 }
 
+
+/* buttons position fix*/
+
+#excelDwnld {
+  margin-left: 10px;
+}

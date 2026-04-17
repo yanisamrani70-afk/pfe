@@ -1,5 +1,8 @@
 import { useState } from "react";
 import './login.css';
+import LogoFaderco from "./assets/Faderco_logo.png"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Login() {
 
   const [email, setEmail] = useState("");
@@ -12,6 +15,7 @@ function Login() {
     setError("");
 if (!email || !password) {
       setError("Email and password are required");
+      toast.error("Email and password are required");
       return;
     }
 
@@ -32,7 +36,7 @@ if (!email || !password) {
       if (response.ok) {
 
         console.log("Logged in successfully:", data);
-
+      toast.success("Logged in successfully");
         // حفظ التوكن
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
@@ -53,6 +57,7 @@ if (!email || !password) {
       } else {
         //error incorrect message
     setError( "Email or password is incorrect");
+    toast.error("Email or password is incorrect");
       }
          //add here the code 
     } catch (err) {
@@ -64,13 +69,15 @@ if (!email || !password) {
 
   return (
     <div className="login_container">
-        <div className="login_form">
+        <form className="login_form">
 
-
+   <img className="login-logo" src={LogoFaderco}/>
+             
     
 
 
-      <h2>LOGIN</h2>
+      <h2>Welcome Back</h2>
+      <p className="login-desc">Log in to your account to continue</p>
  <label htmlFor="email" className={error ? "label-error" : ""}>Email</label>
       <input
         type="email"
@@ -96,10 +103,11 @@ if (!email || !password) {
       
 
       <button onClick={handleLogin}>Login</button>
-
+ <div className="login-error-slot" aria-live="polite">
       {error && <p style={{ color: "red" }}>{error}</p>}
-        </div>
-        <h3>&copy; 2026 Prototype</h3>
+   </div>     
+   </form>
+      <ToastContainer position="top-center" autoClose={3000} />  
     </div>
     
   );
