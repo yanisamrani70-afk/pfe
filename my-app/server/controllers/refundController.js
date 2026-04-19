@@ -1,6 +1,6 @@
 const pool = require("../config/db");
 
-/* Insert Refund */
+/* Insert Refund in client's form page*/
 exports.createRefund = async (req, res) => {
   const {
     full_name,
@@ -35,11 +35,11 @@ exports.createRefund = async (req, res) => {
   }
 };
 
-/* Get refund requests */
+/* ** Agent page **  Get refund requests in the Agent's refund requests table */
 exports.getDemandes = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM refund_requests ORDER BY id DESC"
+      "SELECT * FROM refund_requests ORDER BY id  ASC"
     );
     res.json(result.rows);
   } catch (error) {
@@ -47,7 +47,7 @@ exports.getDemandes = async (req, res) => {
   }
 };
 
-/* Double payments */
+/* Double payments table*/
 exports.getDoublePayments = async (req, res) => {
   try {
     const result = await pool.query(`
@@ -77,13 +77,14 @@ exports.approveRefund = async (req, res) => {
     payment_date,
     amount,
     phone,
+    bl,
   } = req.body;
 
   try {
     await pool.query(
       `INSERT INTO approved_refunds
-      (full_name, customer_identifier, transaction_number, payment_date, amount, phone)
-      VALUES ($1,$2,$3,$4,$5,$6)`,
+      (full_name, customer_identifier, transaction_number, payment_date, amount, phone,bl)
+      VALUES ($1,$2,$3,$4,$5,$6,$7)`,
       [
         full_name,
         customer_identifier,
@@ -91,6 +92,7 @@ exports.approveRefund = async (req, res) => {
         payment_date,
         amount,
         phone,
+      bl,
       ]
     );
 
@@ -107,12 +109,13 @@ exports.approveRefund = async (req, res) => {
   }
 };
 
-/* Approved refunds */
+/*    **FINANCE**   Approved refunds */
 exports.getApprovedRefunds = async (req, res) => {
   try {
     const result = await pool.query(
       "SELECT * FROM approved_refunds ORDER BY id DESC"
     );
+     
 
     res.json(result.rows);
   } catch (error) {
@@ -254,15 +257,22 @@ exports.caissiersend=async(req, res) => {
     );
 
     if (existing.rows.length > 0) {
-      return res.status(400).json({ error: "This payment already exists in caissier_table ❌" });
+      return res.status(400).json({ error: "This payment already exists in caissier_table" });
     }
 
     await pool.query(
       `INSERT INTO caissier_table
        (name, customer_id, bl, transaction_number, amount, payment_date, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [name, customer_id, bl, transaction_number, amountNumber, payment_date, "Pending"]
+      [name, customer_id, bl, transaction_number, amountNumber, payment_date, "pending"]
     );
+    await pool.query(
+      `UPDATE approved_refunds
+       SET status='approved'
+       WHERE id=$1`,
+      [id]
+    );
+
 
     res.json({ message: "Inserted into caissier_table with status Pending ✅" });
 
@@ -319,6 +329,7 @@ exports.sendToFinance = async (req, res) => {
   res.json({ message: "Sent to finance successfully" });
 };
 */
+/* **Agent** */
 exports.rejectDemande = async (req, res) => {
   const { id } = req.params;
 
@@ -340,5 +351,33 @@ exports.rejectDemande = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+exports.rejectfinance = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      `UPDATE approved_refunds
+       SET status = $1 
+       WHERE id = $2 
+       RETURNING *`,
+      ["rejected", id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Demande not found" });
+    }
+
+    return res.status(200).json({
+      message: "Demande rejected successfully",
+      demande: result.rows[0],
+    });
+
+  } catch (error) {
+    console.error("RejectDemande Error:", error);
+    return res.status(500).json({ error: "Server error" });
   }
 };

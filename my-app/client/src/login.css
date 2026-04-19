@@ -5,37 +5,47 @@
   
 }
 .login_container {
-  
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content:space-between;
+  justify-content: center;
   align-items: center;
- background: linear-gradient(110deg,rgba(2, 0, 36, 1) 0%, rgba(1, 1, 122, 1) 82%, rgba(1, 1, 122, 1) 68%);
-/*background: linear-gradient(150deg,rgba(40, 153, 176, 1) 0%, rgba(1, 59, 166, 1) 30%, rgba(1, 59, 166, 1) 68%, rgba(40, 153, 176, 1) 100%);
-*/}
+  background: linear-gradient(135deg, #2d2d3a 0%, #1a1a24 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 20px;
+}
 
 
 .login_form {
-  width: 100%;
-  max-width: 600px;
-   margin: auto;
-   opacity: 0.8;
-  background: rgba(255, 255, 255);;
-  padding:35px 35px 50px;
-  border-radius: 10px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  max-height: 370px;
-  height: 100%;
+  width: 600px;
+  max-width: 100%;
+  background: white;
+  padding: 45px 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
 }
+
+.login-logo {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 18px;
+  object-fit: contain;
+}
+
 
 .login_form h2 {
   
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   color: black;
 }
-
+.login_form .login-desc{
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
 .login_form input {
   width: 100%;
   padding: 12px;
@@ -58,26 +68,24 @@ label{
   
 }
 .login_form button {
-  width: 100%;
-  padding: 12px;
+   width: 100%;
+  padding: 13px;
   border: none;
-  border-radius: 5px;
-  background-color: #1c6ed5;
+  border-radius: 8px;
+  background: #1e3a8a;
   color: white;
   font-size: 16px;
-  
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s;
-  margin-top: 1.5rem;
-
-  font-weight: bold;
+  transition: 0.2s;
+  
 }
 
 .login_form button:hover {
   background: #1c6ed5;
 }
 
-h3{
+#copyright{
   color: white;
   font-weight: 100;
   margin-bottom: 1rem;
@@ -93,4 +101,11 @@ h3{
 }
 .label-error{
   color:red;
+}
+.login-error-slot{
+min-height: 30px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

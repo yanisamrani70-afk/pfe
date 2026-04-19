@@ -23,6 +23,8 @@ router.post("/caissier-post", refundController.testapicassier);
 router.get("/approved-refunds", auth, checkRole("finance", "cassier"), refundController.getApprovedRefunds);
 //hada wsh zdt
 router.post("/caissiersend", auth, checkRole("finance", "cassier"), refundController.caissiersend);
+router.put("/demandes/:id/rejectfinance", auth, checkRole("finance"), refundController.rejectfinance);
+
 // Test route protected
 router.get("/refunds", auth, (req, res) => {
   res.json({
