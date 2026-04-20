@@ -95,7 +95,6 @@ exports.approveRefund = async (req, res) => {
       bl,
       ]
     );
-
     await pool.query(
       `UPDATE refund_requests
        SET status='approved'
@@ -250,6 +249,8 @@ exports.caissiersend=async(req, res) => {
     }
 
     const customer_id = idResult.rows[0].customer_identifier;
+   
+const customer_identifier = idResult.rows[0].customer_identifier;
 
     const existing = await pool.query(
       `SELECT * FROM caissier_table WHERE name = $1 AND bl = $2 AND amount = $3`,
@@ -266,13 +267,21 @@ exports.caissiersend=async(req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [name, customer_id, bl, transaction_number, amountNumber, payment_date, "pending"]
     );
+     
+    const updateRow = await pool.query(
+      `UPDATE approved_refunds
+       SET status='approved'
+        WHERE customer_identifier = $1 AND bl = $2`,
+  [customer_identifier, bl]
+    );
+    console.log(updateRow.rowCount);
+/*const { id } = req.params;
     await pool.query(
       `UPDATE approved_refunds
        SET status='approved'
-       WHERE id=$1`,
-      [id]
-    );
-
+       WHERE customer_identifier=$2`,
+      [customer_identifier]
+    );   */
 
     res.json({ message: "Inserted into caissier_table with status Pending ✅" });
 

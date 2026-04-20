@@ -299,7 +299,7 @@ const handleLogout = () => {
         <div className="action-buttons">
               <button
   className="btn approve"
-  disabled={!selectedDemande || selectedDemande.status === "approved"} 
+  disabled={!selectedDemande || selectedDemande.status === "approved" || selectedDemande.status === "rejected"} 
   onClick={handleApprove}
 >
   sent_to_finance

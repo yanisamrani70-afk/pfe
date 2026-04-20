@@ -346,11 +346,11 @@ const handleReject = async () => {
         <td>{demande.transaction_number}</td>
         <td>{demande.payment_date}</td>
         <td>{demande.amount} DA</td>
-        
+         <td>
          <span className={`status-badge ${demande.status || "pending"}`}>
                             {demande.status || "Pending"}
                           </span>
-        
+        </td>
       </tr>
     ))
   ) : (
@@ -414,14 +414,14 @@ const handleReject = async () => {
         <div className="action-buttons">
           <button
             className="btn approve"
-            disabled={!isValid || isButtonDisabled}
+            disabled={!isValid || isButtonDisabled || selectedDemande.status === "rejected" || selectedDemande.status === "approved"}
             onClick={handleApprove}
           >
             Approve
           </button>
           <button
             className="btn reject"
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled || selectedDemande.status === "rejected" || selectedDemande.status === "approved"}
             onClick={handleReject}
           >
             Reject
