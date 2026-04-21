@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logoutLogo from "./assets/logout-16.ico";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as XLSX from "xlsx";
 // icons imported from https://icons.getbootstrap.com/icons
 const MoonIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moon" viewBox="0 0 16 16">
@@ -18,8 +19,8 @@ const SunIcon = () => (
 
 function Finance() {
   const [demandes, setDemandes] = useState([]);
-  const [bankCSV, setBankCSV] = useState([]);
-  const [filteredCSV, setFilteredCSV] = useState([]);
+  const [bankXLSX, setBankXLSX] = useState([]);
+  const [filteredXLSX, setFilteredXLSX] = useState([]);
   const [selectedDemande, setSelectedDemande] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [dark, setDark] = useState(false);
@@ -47,33 +48,33 @@ function Finance() {
     .catch((err) => console.error("Erreur demandes:", err));
 }, []);
 
+ // read xlsx file source : https://dev.to/enesakk0/react-read-excel-and-data-visualize-1498
+  useEffect(()=> {
+  // fetch the file in public folder
+  fetch("/bank.xlsx")
+  .then((res) => res.arrayBuffer())
+  .then((data) => {
+const wb = XLSX.read(data,{type: "buffer"});
+const sheetName = wb.SheetNames[0]; 
+const sheet = wb.Sheets[sheetName];
 
-useEffect(() => {
-    fetch("/bank.csv")
-      .then((res) => res.text())
-      .then((text) => {
-        const lines = text.trim().split("\n");
-        const headers = lines[0].split(";");
-        const rows = lines.slice(1).map((line) => {
-          const values = line.split(";");
-          const row = {};
-          headers.forEach((header, index) => {
-            row[header.trim()] = values[index]?.trim() || "";
-          });
-          return row;
-        });
-        setBankCSV(rows);
-        setFilteredCSV(rows);
-      })
-      .catch((err) => console.error("Error loading CSV:", err));
-  }, []);
+//convert to JSON 
+const rows = XLSX.utils.sheet_to_json(sheet);
+  
+//setData(json)
+setBankXLSX(rows);
+      setFilteredXLSX(rows);
+
+  });
+
+  },[]);
 //
 // حساب المدفوعات المكررة
 const getDuplicatePayments = () => {
   const duplicates = [];
   const seen = {};
 
-  bankCSV.forEach((row) => {
+  bankXLSX.forEach((row) => {
     const key = `${row.BL}-${row.customer_id}-${row.amount}`; // مفتاح فريد لكل دفعة
     if (seen[key]) {
       duplicates.push(row); // تم الدفع مسبقًا
@@ -88,20 +89,20 @@ const getDuplicatePayments = () => {
   // Check if row is valid by BL
   const isRowValid = (row, demande) => {
     if (!demande || row.BL !== demande.bl) return false;
-    return row.amount === demande.amount && row.status === "paid";
+    return Number(row.amount) === Number(demande.amount) && row.status === "paid";
   };
 
   // Filter CSV by selected demande
   const handleRowClick = (demande) => {
     setSelectedDemande(demande);
 
-    const match = bankCSV.find((row) => row.BL === demande.bl);
+    const match = bankXLSX.find((row) => row.BL === demande.bl);
     
     if (match) {
-      setFilteredCSV([match]);
+      setFilteredXLSX([match]);
       setIsValid(isRowValid(match, demande));
     } else {
-      setFilteredCSV(bankCSV);
+      setFilteredXLSX(bankXLSX);
       setIsValid(false);
     }
   };
@@ -109,7 +110,7 @@ const getDuplicatePayments = () => {
   // Clear selection
   const resetSelection = () => {
     setSelectedDemande(null);
-    setFilteredCSV(bankCSV);
+    setFilteredXLSX(bankXLSX);
     setIsValid(false);
   };
 
@@ -382,8 +383,8 @@ const handleReject = async () => {
                   </tr>
                 </thead>
                 <tbody className="table-body">
-                  {filteredCSV.length > 0 ? (
-                    filteredCSV.map((row, index) => {
+                  {filteredXLSX.length > 0 ? (
+                    filteredXLSX.map((row, index) => {
                       const isInvalid = selectedDemande && row.BL === selectedDemande.BL && !isRowValid(row, selectedDemande);
                       return (
                         <tr key={index} className={isInvalid ? "invalid" : ""}>
