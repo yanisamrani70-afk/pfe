@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logoutLogo from "./assets/logout-16.ico";
+import { Navigate } from "react-router-dom";
 function Agent() {
   const [demandes, setDemandes] = useState([]);
   const [doublePayments, setDoublePayments] = useState([]);
   const [selectedDemande, setSelectedDemande] = useState(null);
   const [filteredPayments, setFilteredPayments] = useState([]);
 const token = localStorage.getItem("token");
+
   // تحميل البيانات من backend
   useEffect(() => {
     // طلبات الزبائن

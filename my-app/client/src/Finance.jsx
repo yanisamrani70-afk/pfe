@@ -5,6 +5,9 @@ import logoutLogo from "./assets/logout-16.ico";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as XLSX from "xlsx";
+
+
+
 // icons imported from https://icons.getbootstrap.com/icons
 const MoonIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moon" viewBox="0 0 16 16">
@@ -26,7 +29,7 @@ function Finance() {
   const [dark, setDark] = useState(false);
 //rbac
   const token = localStorage.getItem("token");
-
+  
   // Toggle dark mode
   useEffect(() => {
     if (dark) {
@@ -163,86 +166,8 @@ const getDuplicatePayments = () => {
   }
 };
 
-/*
-  try {
-    const res = await fetch("http://localhost:5000/api/approve", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-         Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        id: selectedDemande.id,
-        full_name: selectedDemande.full_name,
-        customer_identifier: selectedDemande.customer_id,
-        transaction_number: selectedDemande.transaction_number,
-        payment_date: selectedDemande.payment_date,
-        amount: selectedDemande.amount,
-        phone: selectedDemande.phone,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || "Server error");
-    }
-
-    // تحديث الواجهة
-    setDemandes((prev) =>
-      prev.map((d) =>
-        d.id === selectedDemande.id ? { ...d, status: "Validé" } : d
-      )
-    );
-
-    alert("Refund approved and saved in DB ✅");
-    resetSelection();
-  } catch (err) {
-    console.error(err);
-    alert("Server error ❌");
-  }*/
 
 
-  // Reject
-  /*
-const handleReject = async () => {
-  if (!selectedDemande) return;
-  if (!window.confirm(`Reject refund for ${selectedDemande.full_name}?`)) return;
-
-  try {
-    const res = await fetch(
-      `http://localhost:5000/api/demandes/${selectedDemande.id}/rejectfinance`,
-      
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || "Request failed");
-
-    setDemandes((prev) =>
-      prev.map((d) =>
-        d.id === selectedDemande.id
-          ? { ...d, status: "Rejeté" }
-          : d
-      )
-    );
-    toast.success("Refund rejected successfully");
-    
-    resetSelection();
-
-  } catch (err) {
-    console.error(err);
-    toast.error("Error rejecting refund");
-  }
-};
-*/
 const handleReject = async () => {
     if (!selectedDemande) return;
 
@@ -433,6 +358,8 @@ const handleReject = async () => {
       <footer>
         <p>Prototype © 2026</p>
       </footer>
+      
+ 
     </div>
   );
 }

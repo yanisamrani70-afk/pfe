@@ -4,7 +4,7 @@ import logoutLogo from "./assets/logout-16.ico";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Navigate } from "react-router-dom";
 function cassier() {
   // table data
   const [payments, setPayments] = useState([]);
@@ -13,7 +13,9 @@ function cassier() {
   const [selectedRows, setSelectedRows] = useState([]);
 //rbac
 const token = localStorage.getItem("token");
-
+if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 /*
   // load data once
   useEffect(() => {
