@@ -5,7 +5,7 @@ exports.createRefund = async (req, res) => {
   const {
     full_name,
     customer_identifier,
-    transaction_number,
+    
     payment_date,
     amount,
     reason,
@@ -15,12 +15,12 @@ exports.createRefund = async (req, res) => {
   try {
     await pool.query(
       `INSERT INTO refund_requests 
-      (full_name, customer_identifier, transaction_number, payment_date, amount, reason, phone)
-      VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      (full_name, customer_identifier, payment_date, amount, reason, phone)
+      VALUES ($1,$2,$3,$4,$5,$6)`,
       [
         full_name,
         customer_identifier,
-        transaction_number,
+        
         payment_date,
         amount,
         reason,
@@ -73,7 +73,7 @@ exports.approveRefund = async (req, res) => {
     id,
     full_name,
     customer_identifier,
-    transaction_number,
+    
     payment_date,
     amount,
     phone,
@@ -81,20 +81,27 @@ exports.approveRefund = async (req, res) => {
   } = req.body;
 
   try {
+    const existing = await pool.query(
+      `SELECT * FROM approved_refunds WHERE customer_identifier = $1 AND bl = $2 AND amount = $3`,
+      [customer_identifier, bl, amount]
+    );
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "This refund already exists in approved_refunds table" });
+    }
     await pool.query(
       `INSERT INTO approved_refunds
-      (full_name, customer_identifier, transaction_number, payment_date, amount, phone,bl)
-      VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      (full_name, customer_identifier, payment_date, amount, phone,bl)
+      VALUES ($1,$2,$3,$4,$5,$6)`,
       [
         full_name,
         customer_identifier,
-        transaction_number,
         payment_date,
         amount,
         phone,
       bl,
       ]
     );
+     
     await pool.query(
       `UPDATE refund_requests
        SET status='approved'
@@ -133,8 +140,6 @@ exports.getApprovedRefunds = async (req, res) => {
    
    customer_id, 
     bl, 
-
-    transaction_number, 
     amount,
 
    payment_date, 
@@ -222,11 +227,11 @@ exports.caissiersend = async (req, res) => {
 */
 exports.caissiersend=async(req, res) => {
   try {
-    let { name, bl, transaction_number, amount, payment_date } = req.body;
+    let { name, bl, amount, payment_date } = req.body;
 
     console.log("Received body:", req.body);
 
-    if (!name || !bl || !transaction_number || !amount || !payment_date) {
+    if (!name || !bl || !amount || !payment_date) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -253,8 +258,8 @@ exports.caissiersend=async(req, res) => {
 const customer_identifier = idResult.rows[0].customer_identifier;
 
     const existing = await pool.query(
-      `SELECT * FROM caissier_table WHERE name = $1 AND bl = $2 AND amount = $3`,
-      [name, bl, amountNumber]
+      `SELECT * FROM caissier_table WHERE customer_id = $1 AND bl = $2 AND amount = $3`,
+      [customer_id, bl, amountNumber]
     );
 
     if (existing.rows.length > 0) {
@@ -263,9 +268,9 @@ const customer_identifier = idResult.rows[0].customer_identifier;
 
     await pool.query(
       `INSERT INTO caissier_table
-       (name, customer_id, bl, transaction_number, amount, payment_date, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [name, customer_id, bl, transaction_number, amountNumber, payment_date, "pending"]
+       (name, customer_id, bl, amount, payment_date, status)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [name, customer_id, bl, amountNumber, payment_date, "pending"]
     );
      
     const updateRow = await pool.query(

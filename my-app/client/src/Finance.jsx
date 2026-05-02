@@ -89,25 +89,31 @@ const getDuplicatePayments = () => {
   return duplicates;
 };
   
-  // Check if row is valid by BL
-  const isRowValid = (row, demande) => {
-    if (!demande || row.BL !== demande.bl) return false;
-    return Number(row.amount) === Number(demande.amount) && row.status === "paid";
-  };
+  // // Check if row is valid by BL
+  // const isRowValid = (row, demande) => {
+  //   if (!demande ||  rows.length < 2) return false;
+  //   return Number(row.amount) === Number(demande.amount) && row.status === "paid";
+  // };
 
   // Filter CSV by selected demande
   const handleRowClick = (demande) => {
     setSelectedDemande(demande);
 
-    const match = bankXLSX.find((row) => row.BL === demande.bl);
-    
-    if (match) {
-      setFilteredXLSX([match]);
-      setIsValid(isRowValid(match, demande));
-    } else {
-      setFilteredXLSX(bankXLSX);
-      setIsValid(false);
-    }
+     const matches = bankXLSX.filter((row)=>row.BL===demande.bl && Number(row.amount)===Number(demande.amount)&& row.status=="paid");
+   
+     if (matches.length > 1) {
+    setFilteredXLSX(matches);
+    setIsValid(true);
+  }else if(matches.length == 1){
+
+    setFilteredXLSX(matches);
+    setIsValid(false);
+  }
+  
+  else{
+    setFilteredXLSX(bankXLSX);
+    setIsValid(false);
+  }
   };
 
   // Clear selection
@@ -140,7 +146,7 @@ const getDuplicatePayments = () => {
         name: selectedDemande.full_name,
         customer_id: selectedDemande.customer_identifier,
         bl: selectedDemande.bl,
-        transaction_number: selectedDemande.transaction_number,
+       
         amount: selectedDemande.amount,
         payment_date: selectedDemande.payment_date,
         status: "pending",
@@ -153,6 +159,11 @@ const getDuplicatePayments = () => {
       throw new Error(data.error || "Insert failed");
     }
 
+setDemandes((prev) =>
+        prev.map((d) =>
+          d.id === selectedDemande.id ? { ...d, status: "approved" } : d
+        )
+      );
     // رسالة نجاح
     
     toast.success("Inserted into caissier_table successfully");
@@ -250,7 +261,7 @@ const handleReject = async () => {
                     <th>Name</th>
                     <th>Customer ID</th>
                     <th>BL</th>
-                    <th>Transaction</th>
+                    
                     <th>Date</th>
                     <th>Amount</th>
                     {/* <th>Reason</th> */}
@@ -269,7 +280,7 @@ const handleReject = async () => {
         <td>{demande.full_name}</td>
         <td>{demande.customer_identifier}</td>
         <td>{demande.bl}</td>
-        <td>{demande.transaction_number}</td>
+        
         <td>{demande.payment_date}</td>
         <td>{demande.amount} DA</td>
          <td>
@@ -281,7 +292,7 @@ const handleReject = async () => {
     ))
   ) : (
     <tr>
-      <td colSpan="10" className="empty-message">
+      <td colSpan="9" className="empty-message">
         No approved refunds found
       </td>
     </tr>
@@ -299,7 +310,7 @@ const handleReject = async () => {
                 <thead className="table-header">
                   <tr>
                     <th>BL</th>
-                    <th>Transaction</th>
+                
                     <th>Customer ID</th>
                     <th>Name</th>
                     <th>Amount</th>
@@ -314,7 +325,7 @@ const handleReject = async () => {
                       return (
                         <tr key={index} className={isInvalid ? "invalid" : ""}>
                           <td>{row.BL}</td>
-                          <td>{row.transaction_number}</td>
+                       
                           <td>{row.customer_id}</td>
                           <td>{row.name}</td>
                           <td>{row.amount} DA</td>
@@ -325,7 +336,7 @@ const handleReject = async () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="7" className="empty-message">
+                      <td colSpan="6" className="empty-message">
                         No transactions found
                       </td>
                     </tr>

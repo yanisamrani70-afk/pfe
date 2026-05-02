@@ -12,7 +12,6 @@ function Form() {
   const [formData, setFormData] = useState({
     full_name: "",
     customer_identifier: "",
-    transaction_number: "",
     payment_date: "",
     amount: "",
     reason: "",
@@ -114,7 +113,7 @@ function Form() {
        setFormData({
       full_name: "",
       customer_identifier: "",
-      transaction_number: "",
+  
       payment_date: "",
       amount: "",
       reason: "",
@@ -164,15 +163,7 @@ function Form() {
           )}
         </div>
 
-        <div className="input-group">
-          <input
-            type="text"
-            name="transaction_number"
-            placeholder="Transaction Number (optional)"
-            value={formData.transaction_number}
-            onChange={handleChange}
-          />
-        </div>
+       
 
         <div className="input-group">
           <input

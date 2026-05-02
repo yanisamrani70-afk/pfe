@@ -60,8 +60,8 @@ reader.writeFile(file,'./test.xlsx')
 
 
 };
-//hada kima time, f had test rah koul 1 minute ymshi exportcsv
-cron.schedule("* * * * *", exportExcel);
+//hada kima time, f had test rah koul 1 second ymshi exportcsv
+cron.schedule("* * * * * *", exportExcel);
 
 
 

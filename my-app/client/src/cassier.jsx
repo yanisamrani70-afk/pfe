@@ -249,7 +249,7 @@ const handleLogout = () => {
          <th>Name</th>
           <th>Customer ID</th>
          <th>BL</th>
-         <th>Transaction</th>
+       
           <th>Amount </th>
          <th>Date</th>
         <th>Status</th>
@@ -265,7 +265,7 @@ const handleLogout = () => {
             <td>{row.name}</td>
             <td>{row.customer_id}</td>
             <td>{row.bl}</td>
-           <td>{row.transaction_number}</td>
+        
           <td>{row.amount} DA</td>
          <td>{row.payment_date}</td>
           <td>
@@ -276,7 +276,7 @@ const handleLogout = () => {
               ))
             ) : (
               <tr>
-         <td colSpan="8" className="empty-message-caissier">
+         <td colSpan="7" className="empty-message-caissier">
          No payments found
           </td>
         </tr>
