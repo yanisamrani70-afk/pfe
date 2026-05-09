@@ -3,6 +3,7 @@ import Agent from "./Agent";
 import Finance from "./Finance"; 
 import Cassier from "./cassier"; 
 import Login from "./login"; 
+import AdminPage from "./AdminPage"; 
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -12,7 +13,7 @@ function App() {
 
   return (
     <Routes>
-
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/login" />} />
 

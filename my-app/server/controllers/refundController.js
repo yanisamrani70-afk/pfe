@@ -395,3 +395,75 @@ exports.rejectfinance = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+exports.getusers = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM users ORDER BY id ASC"
+    );
+
+    res.json(result.rows);
+
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+
+// ADD USER
+exports.insertuser = async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+
+    const result = await pool.query(
+      `INSERT INTO users (username,email,password,role)
+       VALUES ($1,$2,$3,$4)
+       RETURNING *`,
+      [username, email, password, role]
+    );
+
+    res.json(result.rows[0]);
+
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+
+// DELETE USER
+exports.deleteuser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      "DELETE FROM users WHERE id=$1",
+      [id]
+    );
+
+    res.json("User deleted");
+
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+
+// UPDATE USER
+exports.putusers = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { username, email, role } = req.body;
+
+    await pool.query(
+      `UPDATE users
+       SET username=$1,email=$2,role=$3
+       WHERE id=$4`,
+      [username, email, role, id]
+    );
+
+    res.json("User updated");
+
+  } catch (err) {
+    console.log(err.message);
+  }
+};

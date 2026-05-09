@@ -51,4 +51,13 @@ router.post(
   
 );
 */
+router.get("/users",refundController.getusers);
+
+router.post("/users",refundController.insertuser);
+
+router.delete("/users/:id",refundController.deleteuser);
+
+router.put("/users/:id",refundController.putusers);
+
+
 module.exports = router;
