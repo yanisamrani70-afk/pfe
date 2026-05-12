@@ -413,7 +413,12 @@ exports.getusers = async (req, res) => {
 exports.insertuser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-
+const existing = await pool.query(
+'Select * FROM users WHERE username =$1 OR email = $2',[username,email]
+);
+if(existing.rows.length > 0) {
+  return res.status(400).json({error:"Username or email already exists in users"});
+    }
     const result = await pool.query(
       `INSERT INTO users (username,email,password,role)
        VALUES ($1,$2,$3,$4)
@@ -450,20 +455,25 @@ exports.deleteuser = async (req, res) => {
 // UPDATE USER
 exports.putusers = async (req, res) => {
   try {
-    const { id } = req.params;
+    const {id} = req.params;
+    const {username, email, role} = req.body;
 
-    const { username, email, role } = req.body;
+    const existing = await pool.query(
+      `SELECT * FROM users WHERE (username = $1 OR email = $2) AND id != $3`,
+      [username, email, id]
+    );
+    if(existing.rows.length > 0) {
+      return res.status(400).json({ error: "Username or email already exists in users" });
+    }
 
-    await pool.query(
-      `UPDATE users
-       SET username=$1,email=$2,role=$3
-       WHERE id=$4`,
+    const result = await pool.query(
+      `UPDATE users SET username=$1, email=$2, role=$3 WHERE id=$4 RETURNING *`,
       [username, email, role, id]
     );
 
-    res.json("User updated");
-
+    res.json(result.rows[0]);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
   }
 };

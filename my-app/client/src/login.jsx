@@ -53,7 +53,10 @@ if (!email || !password) {
         else if (data.role === "cassier") {
           window.location.href = "/cassier";
         }
-
+        else if(data.role === "admin"){
+          window.location.href = "/admin";
+        }
+            
       } else {
         //error incorrect message
     setError( "Email or password is incorrect");

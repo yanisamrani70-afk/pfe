@@ -7,7 +7,7 @@
 }
 
 body {
-  background: #e0e0e0;
+  
   min-height: 100vh;
 }
 
@@ -89,8 +89,12 @@ body {
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+input{
+color: black;
 
+}
 .add-user-form input {
+  
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -178,3 +182,39 @@ tbody tr:hover {
 .delete-btn:hover {
   opacity: 0.8;
 }
+
+:root { --background: #e0e0e0; }
+.dark { --background: #0f1525; }
+
+body {
+  background: var(--background, #e0e0e0);
+}
+
+.dark .dashboard-content .table-section {
+  background: #1a2340;
+  color: #e0e0e0;
+}
+
+.dark .table-section h2 {
+  color: #e0e0e0;
+}
+
+.dark tbody td {
+  color: #b8c5d6;
+  border-bottom-color: #283550;
+}
+
+.dark tbody tr:hover {
+  background: #253050;
+}
+
+:root.dark .table-container {
+  border-color: #283550;
+}
+
+.dark .add-user-form input {
+  background: #253050;
+  border-color: #283550;
+  color: #e0e0e0;
+}
+

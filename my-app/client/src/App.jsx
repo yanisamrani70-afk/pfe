@@ -13,7 +13,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/admin" element={<AdminPage />} />
+     
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/login" />} />
 
@@ -30,6 +30,11 @@ function App() {
       <Route
         path="/finance"
         element={token ? <Finance /> : <Navigate to="/login" />}
+      />)}
+      {role === "admin" && (
+      <Route
+       path="/admin"
+       element={token ? <AdminPage /> : <Navigate to="/login" />}
       />)}
 
       <Route path="*" element={<Navigate to="/login" />} />
